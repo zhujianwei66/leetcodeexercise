@@ -4,7 +4,7 @@
  * @Author: ZhuJianwei
  * @Date: 2023-09-09 19:40:37
  * @LastEditors: ZhuJianwei
- * @LastEditTime: 2024-04-14 23:01:36
+ * @LastEditTime: 2024-04-27 01:10:53
  */
 /*
  * @lc app=leetcode.cn id=21 lang=c
@@ -22,45 +22,55 @@
  */
 struct ListNode *mergeTwoLists(struct ListNode *list1, struct ListNode *list2)
 {
-    ListNode *head, tear;
-    head = list1;
-    tear = list1;
-    if (head == NULL) // list1 为空
+    if (list1 == NULL)
     {
-        if (list2 != NULL)
+        // printf("list1 is NULL\n");
+        return list2;
+    }
+    if (list2 == NULL)
+    {
+        // printf("list2 is NULL\n");
+        return list1;
+    }
+    struct ListNode *p_1, *p_2, *last, *ret;
+    if (list1->val > list2->val)
+    {
+        ret = list2;
+        p_2 = list1;
+    }
+    else
+    {
+        ret = list1;
+        p_2 = list2;
+    }
+    last = ret;
+    // printf("%d\n", last->val);
+    p_1 = ret->next;
+
+    while ((p_1 != NULL) && (p_2 != NULL))
+    {
+        if (p_1->val <= p_2->val)
         {
-            head = list2;
+            // printf("p_1 small\n");
+            last = p_1;
+            p_1 = p_1->next;
+        }
+        else
+        {
+            // printf("p_2 small\n");
+            last->next = p_2;
+            p_2 = p_2->next;
+            last->next->next = p_1;
+            last = last->next;
         }
     }
-    else // list1 非空
+    printf("%d\n", last->val);
+    if (p_1 == NULL)
     {
-        while (list1 != NULL)
-        {
-            if (list2 != NULL)
-            {
-                if (list1.val > list2.val) // list2的节点小,
-                {
-                    tear->next = list2;
-                    list2 = list2->next;
-                }
-                else // list1节点小
-                {
-                    tear->next = list1;
-                    list1 = list1->next;
-                }
-                tear = tear->next;
-            }
-            else
-            {
-                break;
-            }
-        }
-        if (p2 != NULL) // list2 非空
-        {
-            tear->next = p2;
-        }
+        // printf("p_1 is NULL\n");
+        last->next = p_2;
     }
 
-    return head;
+    return ret;
 }
 // @lc code=end
